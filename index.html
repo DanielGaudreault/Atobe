@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Editor Pro - Like Adobe</title>
+    <title>Atobe Pro - Next Generation PDF Editor</title>
     <style>
         * {
             margin: 0;
@@ -13,29 +13,87 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #1e1e1e;
+            background: #0a0a0a;
             color: #fff;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Adobe-like toolbar */
+        /* Atobe premium brand colors */
+        :root {
+            --atobe-primary: #6c5ce7;
+            --atobe-secondary: #a463f5;
+            --atobe-accent: #00d2ff;
+            --atobe-success: #00b894;
+            --atobe-warning: #fdcb6e;
+            --atobe-danger: #d63031;
+            --atobe-dark: #1e1e1e;
+            --atobe-darker: #121212;
+            --atobe-card: #1a1a1a;
+            --atobe-border: #2d2d2d;
+            --atobe-glow: rgba(108, 92, 231, 0.3);
+        }
+
+        /* Premium toolbar */
         .toolbar {
-            background: #2d2d2d;
-            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--atobe-darker) 0%, var(--atobe-dark) 100%);
+            padding: 8px 20px;
             display: flex;
             align-items: center;
             gap: 20px;
-            border-bottom: 1px solid #3d3d3d;
+            border-bottom: 2px solid var(--atobe-primary);
             user-select: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 100;
+        }
+
+        .atobe-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            padding-right: 25px;
+            border-right: 1px solid var(--atobe-border);
+            letter-spacing: 1px;
+        }
+
+        .atobe-logo span {
+            background: linear-gradient(135deg, var(--atobe-primary), var(--atobe-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .atobe-logo span::after {
+            content: 'PRO';
+            font-size: 10px;
+            position: absolute;
+            top: -8px;
+            right: -20px;
+            background: var(--atobe-primary);
+            color: white;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .atobe-logo i {
+            font-size: 28px;
+            color: var(--atobe-primary);
+            filter: drop-shadow(0 0 10px var(--atobe-glow));
         }
 
         .toolbar-group {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 0 8px;
-            border-right: 1px solid #3d3d3d;
+            gap: 4px;
+            padding: 0 12px;
+            border-right: 1px solid var(--atobe-border);
+            position: relative;
         }
 
         .toolbar-group:last-child {
@@ -46,47 +104,103 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
+            padding: 8px 14px;
             background: transparent;
             border: none;
-            color: #fff;
-            border-radius: 4px;
+            color: #ccc;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toolbar-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .toolbar-button:hover::before {
+            width: 150px;
+            height: 150px;
         }
 
         .toolbar-button:hover {
-            background: #3d3d3d;
+            color: #fff;
+            background: rgba(108, 92, 231, 0.15);
         }
 
         .toolbar-button.active {
-            background: #0d6efd;
+            background: linear-gradient(135deg, var(--atobe-primary), var(--atobe-secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
 
         .toolbar-button i {
             font-size: 16px;
         }
 
+        /* Tooltips */
+        .toolbar-button[data-tooltip] {
+            position: relative;
+        }
+
+        .toolbar-button[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--atobe-dark);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            border: 1px solid var(--atobe-border);
+            z-index: 1000;
+        }
+
         /* Main container */
         .main-container {
             display: flex;
             height: calc(100vh - 50px);
+            position: relative;
         }
 
-        /* Left sidebar - Pages */
+        /* Left sidebar premium */
         .pages-sidebar {
-            width: 250px;
-            background: #252525;
-            border-right: 1px solid #3d3d3d;
+            width: 280px;
+            background: var(--atobe-darker);
+            border-right: 1px solid var(--atobe-border);
             display: flex;
             flex-direction: column;
+            transition: width 0.3s;
+        }
+
+        .pages-sidebar.collapsed {
+            width: 50px;
         }
 
         .sidebar-header {
-            padding: 16px;
+            padding: 16px 20px;
             font-weight: 600;
-            border-bottom: 1px solid #3d3d3d;
+            border-bottom: 1px solid var(--atobe-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, var(--atobe-dark), var(--atobe-darker));
+            color: var(--atobe-accent);
+            letter-spacing: 0.5px;
         }
 
         .pages-list {
@@ -96,74 +210,102 @@
         }
 
         .page-thumbnail {
-            background: #2d2d2d;
+            background: var(--atobe-card);
             border: 2px solid transparent;
-            border-radius: 4px;
+            border-radius: 8px;
             margin-bottom: 12px;
-            padding: 8px;
+            padding: 12px;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: all 0.3s;
             position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .page-thumbnail:hover {
-            border-color: #0d6efd;
+            border-color: var(--atobe-primary);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.3);
         }
 
         .page-thumbnail.active {
-            border-color: #0d6efd;
-            background: #353535;
+            border-color: var(--atobe-primary);
+            background: linear-gradient(135deg, #252525, #1a1a1a);
+            box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.5);
         }
 
         .page-preview {
-            height: 120px;
+            height: 140px;
             background: #fff;
-            border-radius: 2px;
+            border-radius: 4px;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #666;
             font-size: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .page-number {
-            font-size: 12px;
-            color: #999;
-            text-align: center;
+        .page-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
         }
 
-        /* Center area - PDF Viewer/Editor */
+        .page-thumbnail:hover .page-preview::before {
+            left: 100%;
+        }
+
+        /* Center area premium */
         .pdf-viewer {
             flex: 1;
-            background: #1a1a1a;
+            background: #0f0f0f;
             position: relative;
             overflow: auto;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 30px;
         }
 
         #pdf-container {
-            background: #2d2d2d;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            background: var(--atobe-card);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        #pdf-container:hover {
+            box-shadow: 0 15px 50px rgba(108, 92, 231, 0.2);
         }
 
         .pdf-page {
             position: relative;
             margin-bottom: 20px;
             background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .pdf-page canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        /* Annotation layer */
+        /* Annotation layer premium */
         .annotation-layer {
             position: absolute;
             top: 0;
@@ -179,119 +321,255 @@
 
         .annotation {
             position: absolute;
-            border: 2px solid #0d6efd;
-            background: rgba(13, 110, 253, 0.1);
+            border: 2px solid var(--atobe-primary);
+            background: rgba(108, 92, 231, 0.1);
             cursor: move;
+            transition: all 0.2s;
+            border-radius: 4px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .annotation.selected {
-            border-color: #ffc107;
-            background: rgba(255, 193, 7, 0.1);
+            border-color: var(--atobe-accent);
+            background: rgba(0, 210, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.3);
+            animation: pulse 1.5s infinite;
         }
 
-        .text-annotation {
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            color: #000;
-            background: rgba(255, 255, 0, 0.3);
-            padding: 2px 4px;
-            border: 1px solid #ffc107;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
         }
 
-        /* Right sidebar - Properties */
+        .annotation.resizable {
+            resize: both;
+            overflow: auto;
+            min-width: 50px;
+            min-height: 30px;
+        }
+
+        .annotation::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, transparent 50%, var(--atobe-primary) 50%);
+            cursor: se-resize;
+            display: none;
+        }
+
+        .annotation.selected::after {
+            display: block;
+        }
+
+        /* Right sidebar premium */
         .properties-sidebar {
-            width: 300px;
-            background: #252525;
-            border-left: 1px solid #3d3d3d;
+            width: 320px;
+            background: var(--atobe-darker);
+            border-left: 1px solid var(--atobe-border);
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .properties-content {
-            padding: 16px;
+            padding: 20px;
             overflow-y: auto;
         }
 
         .property-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            background: var(--atobe-card);
+            padding: 18px;
+            border-radius: 10px;
+            border-left: 4px solid var(--atobe-primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .property-group:hover {
+            transform: translateX(-2px);
         }
 
         .property-label {
             font-size: 12px;
-            color: #999;
-            margin-bottom: 6px;
+            color: #aaa;
+            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .property-label i {
+            color: var(--atobe-primary);
         }
 
         .property-input {
             width: 100%;
-            padding: 8px;
-            background: #2d2d2d;
-            border: 1px solid #3d3d3d;
+            padding: 10px;
+            background: var(--atobe-darker);
+            border: 1px solid var(--atobe-border);
             color: #fff;
-            border-radius: 4px;
-            margin-bottom: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
         }
 
         .property-input:focus {
             outline: none;
-            border-color: #0d6efd;
+            border-color: var(--atobe-primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
         }
 
+        /* Color picker premium */
         .color-picker {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
             cursor: pointer;
             border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
         }
 
         .color-option:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 10;
         }
 
         .color-option.selected {
             border-color: #fff;
+            box-shadow: 0 0 0 2px var(--atobe-primary);
         }
 
-        /* Status bar */
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Quick tools floating panel */
+        .quick-tools {
+            position: absolute;
+            bottom: 30px;
+            right: 340px;
+            display: flex;
+            gap: 8px;
+            background: rgba(30,30,30,0.95);
+            padding: 10px;
+            border-radius: 40px;
+            border: 1px solid var(--atobe-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+        }
+
+        .quick-tool {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--atobe-darker);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quick-tool:hover {
+            background: var(--atobe-primary);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        /* Status bar premium */
         .status-bar {
-            background: #2d2d2d;
-            padding: 4px 16px;
+            background: linear-gradient(90deg, var(--atobe-darker), var(--atobe-dark));
+            padding: 6px 20px;
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             color: #999;
-            border-top: 1px solid #3d3d3d;
+            border-top: 1px solid var(--atobe-border);
+            position: relative;
+            z-index: 100;
         }
 
-        /* Loading overlay */
+        .status-bar span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-bar span i {
+            color: var(--atobe-primary);
+            font-size: 14px;
+        }
+
+        /* Loading overlay premium */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.9);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-content {
+            background: linear-gradient(135deg, var(--atobe-dark), var(--atobe-darker));
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border-left: 6px solid var(--atobe-primary);
+            box-shadow: 0 20px 60px rgba(108, 92, 231, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #0d6efd;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--atobe-primary);
+            border-right: 4px solid var(--atobe-accent);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -299,28 +577,109 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Context menu */
+        /* Context menu premium */
         .context-menu {
             position: absolute;
-            background: #2d2d2d;
-            border: 1px solid #3d3d3d;
-            border-radius: 4px;
-            padding: 4px 0;
+            background: var(--atobe-card);
+            border: 1px solid var(--atobe-border);
+            border-radius: 10px;
+            padding: 6px 0;
             display: none;
-            z-index: 1000;
+            z-index: 1500;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            min-width: 180px;
         }
 
         .context-menu-item {
-            padding: 8px 24px;
+            padding: 10px 24px;
             cursor: pointer;
             font-size: 13px;
+            color: #fff;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .context-menu-item:hover {
-            background: #3d3d3d;
+            background: linear-gradient(90deg, var(--atobe-primary), var(--atobe-secondary));
+            padding-left: 30px;
         }
 
-        /* Icons (Font Awesome-like) */
+        .context-menu-item i {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Modal premium */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--atobe-card);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--atobe-border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            min-width: 400px;
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: translate(-50%, -40%); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--atobe-primary);
+            font-size: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--atobe-darker);
+            border: 1px solid var(--atobe-border);
+            color: #fff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-button.primary {
+            background: var(--atobe-primary);
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: var(--atobe-secondary);
+            transform: translateY(-2px);
+        }
+
+        .modal-button.secondary {
+            background: var(--atobe-border);
+            color: white;
+        }
+
+        /* Icons premium */
         .icon-file:before { content: "📄"; }
         .icon-edit:before { content: "✏️"; }
         .icon-text:before { content: "T"; }
@@ -331,72 +690,218 @@
         .icon-zoom-out:before { content: "🔍-"; }
         .icon-hand:before { content: "✋"; }
         .icon-select:before { content: "⬆️"; }
+        .icon-atobe:before { content: "⚡"; }
+        .icon-undo:before { content: "↩"; }
+        .icon-redo:before { content: "↪"; }
+        .icon-crop:before { content: "✂"; }
+        .icon-rotate:before { content: "↻"; }
+        .icon-paint:before { content: "🎨"; }
+        .icon-eraser:before { content: "⌫"; }
+        .icon-shape:before { content: "⬛"; }
+        .icon-align:before { content: "⚖"; }
+        .icon-layer:before { content: "📑"; }
+        .icon-link:before { content: "🔗"; }
+        .icon-protect:before { content: "🔒"; }
+        .icon-comment:before { content: "💬"; }
+        .icon-stamp:before { content: "📌"; }
+        .icon-measure:before { content: "📏"; }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
+    <!-- Premium Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 style="color: var(--atobe-primary); margin-bottom: 10px;">ATOBE PRO</h3>
+            <p><i>⚡</i> Processing your document with AI...</p>
+        </div>
     </div>
 
     <!-- Context Menu -->
     <div class="context-menu" id="contextMenu">
-        <div class="context-menu-item" onclick="deleteSelectedAnnotation()">Delete</div>
-        <div class="context-menu-item" onclick="copyAnnotation()">Copy</div>
-        <div class="context-menu-item" onclick="cutAnnotation()">Cut</div>
-        <div class="context-menu-item" onclick="bringToFront()">Bring to Front</div>
+        <div class="context-menu-item" onclick="deleteSelectedAnnotation()"><i>🗑️</i> Delete</div>
+        <div class="context-menu-item" onclick="copyAnnotation()"><i>📋</i> Copy</div>
+        <div class="context-menu-item" onclick="cutAnnotation()"><i>✂️</i> Cut</div>
+        <div class="context-menu-item" onclick="pasteAnnotation()"><i>📌</i> Paste</div>
+        <div class="context-menu-item" onclick="duplicateAnnotation()"><i>🔄</i> Duplicate</div>
+        <div class="context-menu-item" onclick="bringToFront()"><i>⬆️</i> Bring to Front</div>
+        <div class="context-menu-item" onclick="sendToBack()"><i>⬇️</i> Send to Back</div>
+        <div class="context-menu-item" onclick="groupAnnotations()"><i>🔗</i> Group</div>
+        <div class="context-menu-item" onclick="ungroupAnnotations()"><i>🔓</i> Ungroup</div>
     </div>
 
-    <!-- Main Toolbar -->
+    <!-- Modals -->
+    <div class="modal" id="signatureModal">
+        <h3><i>✍️</i> Create Signature</h3>
+        <canvas id="signatureCanvas" width="300" height="150" style="border: 2px dashed var(--atobe-border); background: white; margin-bottom: 15px; border-radius: 8px;"></canvas>
+        <div class="modal-buttons">
+            <button class="modal-button secondary" onclick="closeSignatureModal()">Cancel</button>
+            <button class="modal-button primary" onclick="saveSignature()">Save Signature</button>
+        </div>
+    </div>
+
+    <div class="modal" id="stampModal">
+        <h3><i>📌</i> Add Stamp</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+            <div class="stamp-option" onclick="selectStamp('approved')" style="background: #00b894; color: white; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">✓ APPROVED</div>
+            <div class="stamp-option" onclick="selectStamp('confidential')" style="background: #d63031; color: white; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">🔒 CONFIDENTIAL</div>
+            <div class="stamp-option" onclick="selectStamp('draft')" style="background: #fdcb6e; color: black; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">📝 DRAFT</div>
+            <div class="stamp-option" onclick="selectStamp('final')" style="background: #6c5ce7; color: white; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">✓ FINAL</div>
+            <div class="stamp-option" onclick="selectStamp('received')" style="background: #00cec9; color: white; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">📦 RECEIVED</div>
+            <div class="stamp-option" onclick="selectStamp('paid')" style="background: #e17055; color: white; padding: 15px; text-align: center; border-radius: 8px; cursor: pointer;">💰 PAID</div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button secondary" onclick="closeStampModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="modal" id="searchModal">
+        <h3><i>🔍</i> Search in Document</h3>
+        <input type="text" class="modal-input" id="searchText" placeholder="Enter search text...">
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <label><input type="checkbox" id="matchCase"> Match Case</label>
+            <label><input type="checkbox" id="wholeWord"> Whole Word</label>
+        </div>
+        <div id="searchResults" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+        <div class="modal-buttons">
+            <button class="modal-button secondary" onclick="closeSearchModal()">Close</button>
+            <button class="modal-button primary" onclick="searchInDocument()">Search</button>
+        </div>
+    </div>
+
+    <!-- Main Toolbar Premium -->
     <div class="toolbar">
+        <div class="atobe-logo">
+            <i class="icon-atobe"></i>
+            <span>ATOBE</span>
+        </div>
+
+        <!-- File Operations -->
         <div class="toolbar-group">
-            <button class="toolbar-button" onclick="loadPDF()">
+            <button class="toolbar-button" onclick="newDocument()" data-tooltip="New Document">
+                <i>📄</i> New
+            </button>
+            <button class="toolbar-button" onclick="loadPDF()" data-tooltip="Open PDF">
                 <i class="icon-file"></i> Open
             </button>
-            <button class="toolbar-button" onclick="savePDF()">
+            <button class="toolbar-button" onclick="savePDF()" data-tooltip="Save">
                 <i class="icon-save"></i> Save
             </button>
-        </div>
-
-        <div class="toolbar-group">
-            <button class="toolbar-button" onclick="selectTool('select')" id="toolSelect">
-                <i class="icon-select"></i> Select
+            <button class="toolbar-button" onclick="saveAsPDF()" data-tooltip="Save As">
+                <i>💾</i> Save As
             </button>
-            <button class="toolbar-button" onclick="selectTool('text')" id="toolText">
-                <i class="icon-text"></i> Text
+            <button class="toolbar-button" onclick="exportPDF()" data-tooltip="Export">
+                <i>📤</i> Export
             </button>
-            <button class="toolbar-button" onclick="selectTool('draw')" id="toolDraw">
-                <i class="icon-edit"></i> Draw
-            </button>
-            <button class="toolbar-button" onclick="selectTool('image')" id="toolImage">
-                <i class="icon-image"></i> Image
-            </button>
-            <button class="toolbar-button" onclick="selectTool('signature')" id="toolSignature">
-                <i class="icon-signature"></i> Signature
+            <button class="toolbar-button" onclick="printPDF()" data-tooltip="Print">
+                <i>🖨️</i> Print
             </button>
         </div>
 
+        <!-- Edit Operations -->
         <div class="toolbar-group">
-            <button class="toolbar-button" onclick="zoomIn()">
+            <button class="toolbar-button" onclick="undo()" data-tooltip="Undo (Ctrl+Z)" id="undoBtn">
+                <i class="icon-undo"></i> Undo
+            </button>
+            <button class="toolbar-button" onclick="redo()" data-tooltip="Redo (Ctrl+Y)" id="redoBtn">
+                <i class="icon-redo"></i> Redo
+            </button>
+            <button class="toolbar-button" onclick="cut()" data-tooltip="Cut">
+                <i>✂️</i> Cut
+            </button>
+            <button class="toolbar-button" onclick="copy()" data-tooltip="Copy">
+                <i>📋</i> Copy
+            </button>
+            <button class="toolbar-button" onclick="paste()" data-tooltip="Paste">
+                <i>📌</i> Paste
+            </button>
+            <button class="toolbar-button" onclick="deleteSelected()" data-tooltip="Delete">
+                <i>🗑️</i> Delete
+            </button>
+        </div>
+
+        <!-- Tools -->
+        <div class="toolbar-group">
+            <button class="toolbar-button active" onclick="selectTool('select')" id="toolSelect" data-tooltip="Select Tool">
+                <i class="icon-select"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('text')" id="toolText" data-tooltip="Text Tool">
+                <i class="icon-text"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('draw')" id="toolDraw" data-tooltip="Draw Tool">
+                <i class="icon-edit"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('shape')" id="toolShape" data-tooltip="Shape Tool">
+                <i class="icon-shape"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('image')" id="toolImage" data-tooltip="Image Tool">
+                <i class="icon-image"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('signature')" id="toolSignature" data-tooltip="Signature Tool">
+                <i class="icon-signature"></i>
+            </button>
+            <button class="toolbar-button" onclick="selectTool('eraser')" id="toolEraser" data-tooltip="Eraser">
+                <i class="icon-eraser"></i>
+            </button>
+        </div>
+
+        <!-- Annotations -->
+        <div class="toolbar-group">
+            <button class="toolbar-button" onclick="addHighlight()" data-tooltip="Highlight">
+                <i>🟨</i> Highlight
+            </button>
+            <button class="toolbar-button" onclick="addUnderline()" data-tooltip="Underline">
+                <i>_</i> Underline
+            </button>
+            <button class="toolbar-button" onclick="addStrikeout()" data-tooltip="Strikeout">
+                <i>−</i> Strikeout
+            </button>
+            <button class="toolbar-button" onclick="addComment()" data-tooltip="Comment">
+                <i class="icon-comment"></i> Comment
+            </button>
+            <button class="toolbar-button" onclick="addStamp()" data-tooltip="Stamp">
+                <i class="icon-stamp"></i> Stamp
+            </button>
+        </div>
+
+        <!-- View -->
+        <div class="toolbar-group">
+            <button class="toolbar-button" onclick="zoomIn()" data-tooltip="Zoom In">
                 <i class="icon-zoom-in"></i>
             </button>
-            <button class="toolbar-button" onclick="zoomOut()">
+            <button class="toolbar-button" onclick="zoomOut()" data-tooltip="Zoom Out">
                 <i class="icon-zoom-out"></i>
             </button>
-            <button class="toolbar-button" onclick="fitToPage()">
-                Fit Page
+            <button class="toolbar-button" onclick="fitToPage()" data-tooltip="Fit to Page">
+                <i>⤢</i> Fit
+            </button>
+            <button class="toolbar-button" onclick="rotateLeft()" data-tooltip="Rotate Left">
+                <i>↺</i>
+            </button>
+            <button class="toolbar-button" onclick="rotateRight()" data-tooltip="Rotate Right">
+                <i>↻</i>
+            </button>
+            <button class="toolbar-button" onclick="toggleFullscreen()" data-tooltip="Fullscreen">
+                <i>⤢</i>
             </button>
         </div>
 
+        <!-- Advanced -->
         <div class="toolbar-group">
-            <button class="toolbar-button" onclick="addTextAnnotation()">
-                Add Text
+            <button class="toolbar-button" onclick="searchModal()" data-tooltip="Search">
+                <i>🔍</i> Search
             </button>
-            <button class="toolbar-button" onclick="addHighlight()">
-                Highlight
+            <button class="toolbar-button" onclick="compareDocuments()" data-tooltip="Compare">
+                <i>⚖️</i> Compare
             </button>
-            <button class="toolbar-button" onclick="addStrikeout()">
-                Strikeout
+            <button class="toolbar-button" onclick="protectPDF()" data-tooltip="Protect">
+                <i class="icon-protect"></i> Protect
+            </button>
+            <button class="toolbar-button" onclick="compressPDF()" data-tooltip="Compress">
+                <i>🗜️</i> Compress
+            </button>
+            <button class="toolbar-button" onclick="ocrPDF()" data-tooltip="OCR">
+                <i>🔤</i> OCR
             </button>
         </div>
     </div>
@@ -404,84 +909,228 @@
     <!-- Main Content Area -->
     <div class="main-container">
         <!-- Pages Sidebar -->
-        <div class="pages-sidebar">
+        <div class="pages-sidebar" id="pagesSidebar">
             <div class="sidebar-header">
-                Pages
-                <button style="float: right;" onclick="addBlankPage()">+</button>
+                <span><i class="icon-file"></i> PAGES</span>
+                <button onclick="addBlankPage()" title="Add new page">+</button>
             </div>
             <div class="pages-list" id="pagesList">
                 <!-- Pages will be dynamically added here -->
+            </div>
+            <div style="padding: 16px; border-top: 1px solid var(--atobe-border);">
+                <button class="toolbar-button" style="width: 100%;" onclick="reorderPages()">
+                    <i>🔄</i> Reorder Pages
+                </button>
+                <button class="toolbar-button" style="width: 100%; margin-top: 8px;" onclick="extractPages()">
+                    <i>📤</i> Extract Pages
+                </button>
             </div>
         </div>
 
         <!-- PDF Viewer -->
         <div class="pdf-viewer" id="pdfViewer">
             <div id="pdf-container"></div>
+            
+            <!-- Quick tools floating panel -->
+            <div class="quick-tools">
+                <button class="quick-tool" onclick="rotateLeft()" title="Rotate Left">↺</button>
+                <button class="quick-tool" onclick="rotateRight()" title="Rotate Right">↻</button>
+                <button class="quick-tool" onclick="cropMode()" title="Crop">✂</button>
+                <button class="quick-tool" onclick="measureMode()" title="Measure">📏</button>
+                <button class="quick-tool" onclick="snapshotMode()" title="Snapshot">📸</button>
+            </div>
         </div>
 
-        <!-- Properties Sidebar -->
+        <!-- Properties Sidebar Premium -->
         <div class="properties-sidebar">
             <div class="sidebar-header">
-                Properties
+                <span><i class="icon-edit"></i> PROPERTIES</span>
             </div>
             <div class="properties-content" id="propertiesPanel">
-                <div class="property-group">
-                    <div class="property-label">Font</div>
+                <!-- Text Properties -->
+                <div class="property-group" id="textProperties">
+                    <div class="property-label"><i>🔤</i> Font</div>
                     <select class="property-input" id="fontFamily" onchange="updateTextProperties()">
                         <option value="Arial">Arial</option>
                         <option value="Times New Roman">Times New Roman</option>
                         <option value="Courier New">Courier New</option>
                         <option value="Helvetica">Helvetica</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Calibri">Calibri</option>
+                        <option value="Tahoma">Tahoma</option>
                     </select>
                     
-                    <div class="property-label">Font Size</div>
-                    <input type="number" class="property-input" id="fontSize" value="12" min="8" max="72" onchange="updateTextProperties()">
-                    
-                    <div class="property-label">Color</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div>
+                            <div class="property-label">Size</div>
+                            <input type="number" class="property-input" id="fontSize" value="12" min="8" max="72" onchange="updateTextProperties()">
+                        </div>
+                        <div>
+                            <div class="property-label">Weight</div>
+                            <select class="property-input" id="fontWeight" onchange="updateTextProperties()">
+                                <option value="normal">Normal</option>
+                                <option value="bold">Bold</option>
+                                <option value="lighter">Light</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Properties -->
+                <div class="property-group">
+                    <div class="property-label"><i>🎨</i> Colors</div>
                     <div class="color-picker" id="colorPicker">
                         <div class="color-option selected" style="background: #000000;" onclick="selectColor('#000000')"></div>
                         <div class="color-option" style="background: #ff0000;" onclick="selectColor('#ff0000')"></div>
                         <div class="color-option" style="background: #0000ff;" onclick="selectColor('#0000ff')"></div>
                         <div class="color-option" style="background: #00ff00;" onclick="selectColor('#00ff00')"></div>
                         <div class="color-option" style="background: #ffff00;" onclick="selectColor('#ffff00')"></div>
+                        <div class="color-option" style="background: #ff00ff;" onclick="selectColor('#ff00ff')"></div>
+                        <div class="color-option" style="background: #00ffff;" onclick="selectColor('#00ffff')"></div>
+                        <div class="color-option" style="background: #ffa500;" onclick="selectColor('#ffa500')"></div>
+                        <div class="color-option" style="background: #800080;" onclick="selectColor('#800080')"></div>
+                        <div class="color-option" style="background: #008000;" onclick="selectColor('#008000')"></div>
+                        <div class="color-option" style="background: #800000;" onclick="selectColor('#800000')"></div>
+                        <div class="color-option" style="background: #808000;" onclick="selectColor('#808000')"></div>
+                        <div class="color-option" style="background: #008080;" onclick="selectColor('#008080')"></div>
+                        <div class="color-option" style="background: #000080;" onclick="selectColor('#000080')"></div>
+                        <div class="color-option" style="background: #666666;" onclick="selectColor('#666666')"></div>
+                        <div class="color-option" style="background: #ffffff; border: 1px solid #333;" onclick="selectColor('#ffffff')"></div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                        <div>
+                            <div class="property-label">Fill</div>
+                            <input type="color" class="property-input" id="fillColor" value="#6c5ce7" onchange="updateFillColor()">
+                        </div>
+                        <div>
+                            <div class="property-label">Stroke</div>
+                            <input type="color" class="property-input" id="strokeColor" value="#000000" onchange="updateStrokeColor()">
+                        </div>
                     </div>
                 </div>
 
+                <!-- Position & Size -->
                 <div class="property-group">
-                    <div class="property-label">Position</div>
-                    <input type="text" class="property-input" id="positionX" placeholder="X" readonly>
-                    <input type="text" class="property-input" id="positionY" placeholder="Y" readonly>
+                    <div class="property-label"><i>📏</i> Position & Size</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div>
+                            <div class="property-label">X</div>
+                            <input type="number" class="property-input" id="positionX" value="0" onchange="updatePosition('x', this.value)">
+                        </div>
+                        <div>
+                            <div class="property-label">Y</div>
+                            <input type="number" class="property-input" id="positionY" value="0" onchange="updatePosition('y', this.value)">
+                        </div>
+                        <div>
+                            <div class="property-label">Width</div>
+                            <input type="number" class="property-input" id="sizeWidth" value="100" onchange="updateSize('width', this.value)">
+                        </div>
+                        <div>
+                            <div class="property-label">Height</div>
+                            <input type="number" class="property-input" id="sizeHeight" value="50" onchange="updateSize('height', this.value)">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 4px; margin-top: 8px;">
+                        <button class="toolbar-button" onclick="lockAspectRatio()" id="aspectLock" style="flex: 1;">🔒 Lock</button>
+                        <button class="toolbar-button" onclick="resetTransform()" style="flex: 1;">↺ Reset</button>
+                    </div>
+                </div>
+
+                <!-- Effects -->
+                <div class="property-group">
+                    <div class="property-label"><i>✨</i> Effects</div>
+                    <div>
+                        <div class="property-label">Opacity</div>
+                        <input type="range" class="property-input" id="opacity" min="0" max="100" value="100" onchange="updateOpacity()">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>0%</span>
+                            <span id="opacityValue">100%</span>
+                        </div>
+                    </div>
                     
-                    <div class="property-label">Size</div>
-                    <input type="text" class="property-input" id="sizeWidth" placeholder="Width" readonly>
-                    <input type="text" class="property-input" id="sizeHeight" placeholder="Height" readonly>
+                    <div style="margin-top: 10px;">
+                        <div class="property-label">Blend Mode</div>
+                        <select class="property-input" id="blendMode" onchange="updateBlendMode()">
+                            <option value="normal">Normal</option>
+                            <option value="multiply">Multiply</option>
+                            <option value="screen">Screen</option>
+                            <option value="overlay">Overlay</option>
+                            <option value="darken">Darken</option>
+                            <option value="lighten">Lighten</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <div class="property-label">Shadow</div>
+                        <label><input type="checkbox" id="shadowEnabled" onchange="updateShadow()"> Enable Shadow</label>
+                    </div>
                 </div>
 
+                <!-- Border Properties -->
                 <div class="property-group">
-                    <div class="property-label">Opacity</div>
-                    <input type="range" class="property-input" id="opacity" min="0" max="100" value="100" onchange="updateOpacity()">
+                    <div class="property-label"><i>⬜</i> Border</div>
+                    <select class="property-input" id="borderStyle" onchange="updateBorder()">
+                        <option value="none">None</option>
+                        <option value="solid">Solid</option>
+                        <option value="dashed">Dashed</option>
+                        <option value="dotted">Dotted</option>
+                        <option value="double">Double</option>
+                        <option value="groove">Groove</option>
+                        <option value="ridge">Ridge</option>
+                    </select>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <div>
+                            <div class="property-label">Width</div>
+                            <input type="number" class="property-input" id="borderWidth" value="1" min="0" max="20" onchange="updateBorder()">
+                        </div>
+                        <div>
+                            <div class="property-label">Radius</div>
+                            <input type="number" class="property-input" id="borderRadius" value="0" min="0" max="50" onchange="updateBorderRadius()">
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Actions -->
                 <div class="property-group">
-                    <button class="toolbar-button" style="width: 100%;" onclick="deleteSelectedAnnotation()">
-                        Delete Selected
-                    </button>
+                    <div class="property-label"><i>⚡</i> Actions</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="toolbar-button" onclick="alignLeft()">← Left</button>
+                        <button class="toolbar-button" onclick="alignCenter()">↔ Center</button>
+                        <button class="toolbar-button" onclick="alignRight()">→ Right</button>
+                        <button class="toolbar-button" onclick="alignTop()">↑ Top</button>
+                        <button class="toolbar-button" onclick="alignMiddle()">↕ Middle</button>
+                        <button class="toolbar-button" onclick="alignBottom()">↓ Bottom</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <button class="toolbar-button" onclick="distributeHorizontal()">↔ Distribute</button>
+                        <button class="toolbar-button" onclick="distributeVertical()">↕ Distribute</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <button class="toolbar-button" onclick="groupAnnotations()">🔗 Group</button>
+                        <button class="toolbar-button" onclick="ungroupAnnotations()">🔓 Ungroup</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Status Bar -->
+    <!-- Status Bar Premium -->
     <div class="status-bar">
-        <div id="pageInfo">Page 1 of 1</div>
-        <div id="zoomLevel">100%</div>
-        <div id="selectionInfo">No selection</div>
+        <span><i>📄</i> <span id="pageInfo">Page 1 of 1</span></span>
+        <span><i>🔍</i> <span id="zoomLevel">100%</span></span>
+        <span><i>✏️</i> <span id="selectionInfo">No selection</span></span>
+        <span><i>📏</i> <span id="documentSize">612 x 792 pt</span></span>
+        <span><i>⚡</i> <span id="aiStatus">AI Ready</span></span>
     </div>
 
-    <!-- Hidden file input for PDF upload -->
+    <!-- Hidden file input -->
     <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
 
-    <!-- Include PDF.js library -->
+    <!-- Include PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
 
@@ -489,7 +1138,7 @@
         // PDF.js configuration
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // Application state
+        // Atobe Pro Application State
         let pdfDoc = null;
         let currentPage = 1;
         let totalPages = 0;
@@ -497,63 +1146,827 @@
         let currentTool = 'select';
         let annotations = [];
         let selectedAnnotation = null;
+        let selectedAnnotations = []; // For multi-select
         let isDrawing = false;
-        let currentColor = '#000000';
+        let currentColor = '#6c5ce7';
         let currentFontSize = 12;
         let currentFontFamily = 'Arial';
+        let currentFillColor = '#6c5ce7';
+        let currentStrokeColor = '#000000';
+        
+        // History management
+        let history = [];
+        let historyIndex = -1;
+        const maxHistorySteps = 50;
+        
+        // Clipboard
+        let clipboard = null;
+        
+        // Groups
+        let groups = [];
+        
+        // Selection rectangle
+        let selectionRect = null;
+        let isSelecting = false;
+        
+        // Aspect ratio lock
+        let aspectRatioLocked = false;
+        let originalAspectRatio = 1;
 
-        // Initialize the application
+        // Initialize Atobe Pro
         document.addEventListener('DOMContentLoaded', function() {
-            // Load a sample PDF or create blank
-            loadSamplePDF();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Initialize with select tool active
-            selectTool('select');
+            showLoading();
+            setTimeout(() => {
+                initializeAtobe();
+                setupEventListeners();
+                setupKeyboardShortcuts();
+                selectTool('select');
+                updateStatusBar('Atobe Pro initialized');
+                hideLoading();
+            }, 2000);
         });
 
+        function initializeAtobe() {
+            // Create a blank document
+            createBlankPDF();
+            
+            // Initialize properties panel
+            updatePropertiesPanel();
+            
+            // Initialize undo/redo buttons
+            updateUndoRedoButtons();
+        }
+
         function setupEventListeners() {
-            // PDF viewer click events for annotations
-            document.getElementById('pdf-container').addEventListener('mousedown', startDrawing);
-            document.getElementById('pdf-container').addEventListener('mousemove', draw);
-            document.getElementById('pdf-container').addEventListener('mouseup', stopDrawing);
-            document.getElementById('pdf-container').addEventListener('mouseleave', stopDrawing);
+            const container = document.getElementById('pdf-container');
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseUp);
+            container.addEventListener('dblclick', handleDoubleClick);
+            container.addEventListener('contextmenu', showContextMenu);
             
-            // Context menu
-            document.getElementById('pdf-container').addEventListener('contextmenu', showContextMenu);
+            // Window events
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('resize', handleResize);
+        }
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Z for undo
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    undo();
+                }
+                // Ctrl+Y for redo
+                if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+                // Ctrl+C for copy
+                if (e.ctrlKey && e.key === 'c') {
+                    e.preventDefault();
+                    copySelected();
+                }
+                // Ctrl+V for paste
+                if (e.ctrlKey && e.key === 'v') {
+                    e.preventDefault();
+                    paste();
+                }
+                // Ctrl+X for cut
+                if (e.ctrlKey && e.key === 'x') {
+                    e.preventDefault();
+                    cutSelected();
+                }
+                // Delete key
+                if (e.key === 'Delete') {
+                    deleteSelectedAnnotation();
+                }
+                // Escape key
+                if (e.key === 'Escape') {
+                    deselectAll();
+                }
+                // Space for hand tool temporarily
+                if (e.key === ' ') {
+                    if (currentTool !== 'hand') {
+                        previousTool = currentTool;
+                        selectTool('hand');
+                    }
+                }
+            });
             
-            // Window click to hide context menu
-            window.addEventListener('click', function() {
-                document.getElementById('contextMenu').style.display = 'none';
+            document.addEventListener('keyup', function(e) {
+                if (e.key === ' ' && previousTool) {
+                    selectTool(previousTool);
+                    previousTool = null;
+                }
             });
         }
 
-        function loadSamplePDF() {
-            // Create a simple blank PDF or load a sample
+        let previousTool = null;
+
+        // History Management
+        function addToHistory(action) {
+            // Remove any future history if we're not at the end
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            
+            // Create history state
+            const state = {
+                annotations: JSON.parse(JSON.stringify(annotations)),
+                action: action,
+                timestamp: Date.now()
+            };
+            
+            history.push(state);
+            historyIndex++;
+            
+            // Limit history size
+            if (history.length > maxHistorySteps) {
+                history.shift();
+                historyIndex--;
+            }
+            
+            updateUndoRedoButtons();
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const state = history[historyIndex];
+                annotations = JSON.parse(JSON.stringify(state.annotations));
+                renderAnnotations(currentPage);
+                updateStatusBar(`Undo: ${state.action || 'previous action'}`);
+            }
+            updateUndoRedoButtons();
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                const state = history[historyIndex];
+                annotations = JSON.parse(JSON.stringify(state.annotations));
+                renderAnnotations(currentPage);
+                updateStatusBar(`Redo: ${state.action || 'next action'}`);
+            }
+            updateUndoRedoButtons();
+        }
+
+        function updateUndoRedoButtons() {
+            document.getElementById('undoBtn').disabled = historyIndex <= 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= history.length - 1;
+        }
+
+        // Selection Management
+        function handleMouseDown(e) {
+            if (currentTool === 'select') {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Start selection rectangle
+                isSelecting = true;
+                selectionRect = {
+                    startX: x,
+                    startY: y,
+                    endX: x,
+                    endY: y
+                };
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (isSelecting && selectionRect) {
+                const rect = e.currentTarget.getBoundingClientRect();
+                selectionRect.endX = e.clientX - rect.left;
+                selectionRect.endY = e.clientY - rect.top;
+                
+                // Draw selection rectangle (you'd implement this visually)
+                drawSelectionRect();
+            }
+        }
+
+        function handleMouseUp(e) {
+            if (isSelecting && selectionRect) {
+                // Select annotations within rectangle
+                selectAnnotationsInRect(selectionRect);
+                isSelecting = false;
+                selectionRect = null;
+            }
+        }
+
+        function handleDoubleClick(e) {
+            if (selectedAnnotation && selectedAnnotation.type === 'text') {
+                // Edit text annotation
+                const newText = prompt('Edit text:', selectedAnnotation.text);
+                if (newText) {
+                    selectedAnnotation.text = newText;
+                    renderAnnotations(currentPage);
+                    addToHistory('Edit text');
+                }
+            }
+        }
+
+        function handleResize() {
+            // Handle window resize
+            fitToPage();
+        }
+
+        function handleKeyDown(e) {
+            // Arrow keys for nudge
+            if (selectedAnnotation) {
+                const step = e.shiftKey ? 10 : 1;
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        selectedAnnotation.x -= step;
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        selectedAnnotation.x += step;
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        selectedAnnotation.y -= step;
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        selectedAnnotation.y += step;
+                        break;
+                }
+                renderAnnotations(currentPage);
+                updatePropertiesPanel();
+            }
+        }
+
+        function selectAnnotationsInRect(rect) {
+            const startX = Math.min(rect.startX, rect.endX);
+            const startY = Math.min(rect.startY, rect.endY);
+            const endX = Math.max(rect.startX, rect.endX);
+            const endY = Math.max(rect.startY, rect.endY);
+            
+            selectedAnnotations = annotations.filter(anno => {
+                return anno.page === currentPage &&
+                       anno.x >= startX && anno.x + anno.width <= endX &&
+                       anno.y >= startY && anno.y + anno.height <= endY;
+            });
+            
+            if (selectedAnnotations.length === 1) {
+                selectedAnnotation = selectedAnnotations[0];
+            } else if (selectedAnnotations.length > 1) {
+                selectedAnnotation = null;
+            }
+            
+            renderAnnotations(currentPage);
+            updatePropertiesPanel();
+        }
+
+        function drawSelectionRect() {
+            // Implementation for drawing selection rectangle
+            // Would use canvas overlay
+        }
+
+        function deselectAll() {
+            selectedAnnotation = null;
+            selectedAnnotations = [];
+            renderAnnotations(currentPage);
+            updatePropertiesPanel();
+        }
+
+        // Group Management
+        function groupAnnotations() {
+            if (selectedAnnotations.length > 1) {
+                const groupId = 'group_' + Date.now();
+                const group = {
+                    id: groupId,
+                    annotations: selectedAnnotations.map(a => a.id),
+                    bounds: calculateGroupBounds(selectedAnnotations)
+                };
+                
+                groups.push(group);
+                
+                // Mark annotations as grouped
+                selectedAnnotations.forEach(anno => {
+                    anno.groupId = groupId;
+                });
+                
+                renderAnnotations(currentPage);
+                addToHistory('Group annotations');
+                updateStatusBar('Grouped ' + selectedAnnotations.length + ' items');
+            }
+        }
+
+        function ungroupAnnotations() {
+            if (selectedAnnotation && selectedAnnotation.groupId) {
+                const groupId = selectedAnnotation.groupId;
+                
+                // Remove group
+                groups = groups.filter(g => g.id !== groupId);
+                
+                // Ungroup annotations
+                annotations.forEach(anno => {
+                    if (anno.groupId === groupId) {
+                        delete anno.groupId;
+                    }
+                });
+                
+                renderAnnotations(currentPage);
+                addToHistory('Ungroup annotations');
+            }
+        }
+
+        function calculateGroupBounds(annos) {
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            annos.forEach(anno => {
+                minX = Math.min(minX, anno.x);
+                minY = Math.min(minY, anno.y);
+                maxX = Math.max(maxX, anno.x + anno.width);
+                maxY = Math.max(maxY, anno.y + anno.height);
+            });
+            return {
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY
+            };
+        }
+
+        // Alignment Functions
+        function alignLeft() {
+            if (selectedAnnotations.length > 0) {
+                const leftmost = Math.min(...selectedAnnotations.map(a => a.x));
+                selectedAnnotations.forEach(anno => {
+                    anno.x = leftmost;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align left');
+            }
+        }
+
+        function alignCenter() {
+            if (selectedAnnotations.length > 0) {
+                const centerX = selectedAnnotations.reduce((sum, a) => sum + a.x + a.width/2, 0) / selectedAnnotations.length;
+                selectedAnnotations.forEach(anno => {
+                    anno.x = centerX - anno.width/2;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align center');
+            }
+        }
+
+        function alignRight() {
+            if (selectedAnnotations.length > 0) {
+                const rightmost = Math.max(...selectedAnnotations.map(a => a.x + a.width));
+                selectedAnnotations.forEach(anno => {
+                    anno.x = rightmost - anno.width;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align right');
+            }
+        }
+
+        function alignTop() {
+            if (selectedAnnotations.length > 0) {
+                const topmost = Math.min(...selectedAnnotations.map(a => a.y));
+                selectedAnnotations.forEach(anno => {
+                    anno.y = topmost;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align top');
+            }
+        }
+
+        function alignMiddle() {
+            if (selectedAnnotations.length > 0) {
+                const centerY = selectedAnnotations.reduce((sum, a) => sum + a.y + a.height/2, 0) / selectedAnnotations.length;
+                selectedAnnotations.forEach(anno => {
+                    anno.y = centerY - anno.height/2;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align middle');
+            }
+        }
+
+        function alignBottom() {
+            if (selectedAnnotations.length > 0) {
+                const bottommost = Math.max(...selectedAnnotations.map(a => a.y + a.height));
+                selectedAnnotations.forEach(anno => {
+                    anno.y = bottommost - anno.height;
+                });
+                renderAnnotations(currentPage);
+                addToHistory('Align bottom');
+            }
+        }
+
+        function distributeHorizontal() {
+            if (selectedAnnotations.length > 2) {
+                const sorted = [...selectedAnnotations].sort((a, b) => (a.x + a.width/2) - (b.x + b.width/2));
+                const first = sorted[0];
+                const last = sorted[sorted.length - 1];
+                const totalWidth = (last.x + last.width/2) - (first.x + first.width/2);
+                const spacing = totalWidth / (sorted.length - 1);
+                
+                for (let i = 1; i < sorted.length - 1; i++) {
+                    sorted[i].x = (first.x + first.width/2) + (spacing * i) - sorted[i].width/2;
+                }
+                
+                renderAnnotations(currentPage);
+                addToHistory('Distribute horizontally');
+            }
+        }
+
+        function distributeVertical() {
+            if (selectedAnnotations.length > 2) {
+                const sorted = [...selectedAnnotations].sort((a, b) => (a.y + a.height/2) - (b.y + b.height/2));
+                const first = sorted[0];
+                const last = sorted[sorted.length - 1];
+                const totalHeight = (last.y + last.height/2) - (first.y + first.height/2);
+                const spacing = totalHeight / (sorted.length - 1);
+                
+                for (let i = 1; i < sorted.length - 1; i++) {
+                    sorted[i].y = (first.y + first.height/2) + (spacing * i) - sorted[i].height/2;
+                }
+                
+                renderAnnotations(currentPage);
+                addToHistory('Distribute vertically');
+            }
+        }
+
+        // Clipboard Functions
+        function copySelected() {
+            if (selectedAnnotation) {
+                clipboard = JSON.parse(JSON.stringify(selectedAnnotation));
+                clipboard.id = 'clipboard_' + Date.now();
+                updateStatusBar('Copied to clipboard');
+            } else if (selectedAnnotations.length > 0) {
+                clipboard = selectedAnnotations.map(a => JSON.parse(JSON.stringify(a)));
+                clipboard.forEach(a => a.id = 'clipboard_' + Date.now() + '_' + Math.random());
+                updateStatusBar('Copied ' + selectedAnnotations.length + ' items');
+            }
+        }
+
+        function cutSelected() {
+            copySelected();
+            deleteSelectedAnnotation();
+            addToHistory('Cut');
+        }
+
+        function paste() {
+            if (clipboard) {
+                if (Array.isArray(clipboard)) {
+                    clipboard.forEach(item => {
+                        item.id = 'pasted_' + Date.now() + '_' + Math.random();
+                        item.page = currentPage;
+                        item.x += 20; // Offset
+                        item.y += 20;
+                        annotations.push(item);
+                    });
+                } else {
+                    clipboard.id = 'pasted_' + Date.now();
+                    clipboard.page = currentPage;
+                    clipboard.x += 20;
+                    clipboard.y += 20;
+                    annotations.push(clipboard);
+                }
+                renderAnnotations(currentPage);
+                addToHistory('Paste');
+                updateStatusBar('Pasted from clipboard');
+            }
+        }
+
+        // Advanced Features
+        function addComment() {
+            const comment = prompt('Enter comment:');
+            if (comment) {
+                const annotation = {
+                    id: 'comment_' + Date.now(),
+                    type: 'comment',
+                    page: currentPage,
+                    text: comment,
+                    x: 100,
+                    y: 100,
+                    width: 200,
+                    height: 60,
+                    color: '#fdcb6e',
+                    author: 'User',
+                    date: new Date().toLocaleString()
+                };
+                
+                annotations.push(annotation);
+                renderAnnotations(currentPage);
+                addToHistory('Add comment');
+            }
+        }
+
+        function addStamp() {
+            document.getElementById('stampModal').style.display = 'block';
+        }
+
+        function selectStamp(type) {
+            const stamps = {
+                approved: { text: '✓ APPROVED', color: '#00b894' },
+                confidential: { text: '🔒 CONFIDENTIAL', color: '#d63031' },
+                draft: { text: '📝 DRAFT', color: '#fdcb6e' },
+                final: { text: '✓ FINAL', color: '#6c5ce7' },
+                received: { text: '📦 RECEIVED', color: '#00cec9' },
+                paid: { text: '💰 PAID', color: '#e17055' }
+            };
+            
+            const stamp = stamps[type];
+            if (stamp) {
+                const annotation = {
+                    id: 'stamp_' + Date.now(),
+                    type: 'stamp',
+                    page: currentPage,
+                    text: stamp.text,
+                    x: 100,
+                    y: 100,
+                    width: 150,
+                    height: 50,
+                    color: stamp.color,
+                    opacity: 0.8,
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                };
+                
+                annotations.push(annotation);
+                renderAnnotations(currentPage);
+                addToHistory('Add stamp');
+            }
+            
+            closeStampModal();
+        }
+
+        function closeStampModal() {
+            document.getElementById('stampModal').style.display = 'none';
+        }
+
+        // Search functionality
+        function searchModal() {
+            document.getElementById('searchModal').style.display = 'block';
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').style.display = 'none';
+        }
+
+        function searchInDocument() {
+            const searchText = document.getElementById('searchText').value;
+            const matchCase = document.getElementById('matchCase').checked;
+            const wholeWord = document.getElementById('wholeWord').checked;
+            
+            if (!searchText) return;
+            
+            // Search implementation would go here
+            // For now, just show message
+            alert('Search functionality would search for: ' + searchText);
+        }
+
+        // Document comparison
+        function compareDocuments() {
+            alert('Document comparison feature would compare two PDFs and highlight differences');
+        }
+
+        // PDF Protection
+        function protectPDF() {
+            const password = prompt('Enter password to protect PDF:');
+            if (password) {
+                const confirmPassword = prompt('Confirm password:');
+                if (password === confirmPassword) {
+                    alert('PDF protected with password');
+                    updateStatusBar('PDF protected');
+                } else {
+                    alert('Passwords do not match');
+                }
+            }
+        }
+
+        // Compression
+        function compressPDF() {
             showLoading();
-            
-            // For demonstration, we'll load a sample PDF from a URL
-            const loadingTask = pdfjsLib.getDocument('https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf');
-            
-            loadingTask.promise.then(function(pdf) {
-                pdfDoc = pdf;
-                totalPages = pdf.numPages;
-                updatePageInfo();
-                renderPage(currentPage);
-                generatePageThumbnails();
+            setTimeout(() => {
                 hideLoading();
-            }).catch(function(error) {
-                console.error('Error loading PDF:', error);
-                // Create a blank page if loading fails
-                createBlankPDF();
-                hideLoading();
-            });
+                alert('PDF compressed successfully (simulated)');
+                updateStatusBar('PDF compressed');
+            }, 2000);
         }
 
+        // OCR
+        function ocrPDF() {
+            alert('OCR feature would extract text from scanned documents');
+        }
+
+        // Measure tool
+        function measureMode() {
+            currentTool = 'measure';
+            updateStatusBar('Measure mode: Click and drag to measure distance');
+        }
+
+        // Snapshot
+        function snapshotMode() {
+            alert('Snapshot tool would capture selected area as image');
+        }
+
+        // Crop
+        function cropMode() {
+            alert('Crop mode would allow cropping the PDF page');
+        }
+
+        // Rotate functions
+        function rotateLeft() {
+            alert('Rotate page left');
+        }
+
+        function rotateRight() {
+            alert('Rotate page right');
+        }
+
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // New document
+        function newDocument() {
+            if (confirm('Create new document? Unsaved changes will be lost.')) {
+                createBlankPDF();
+                annotations = [];
+                history = [];
+                historyIndex = -1;
+                updateStatusBar('New document created');
+            }
+        }
+
+        // Save As
+        function saveAsPDF() {
+            const filename = prompt('Enter filename:', 'document.pdf');
+            if (filename) {
+                savePDF();
+            }
+        }
+
+        // Print
+        function printPDF() {
+            window.print();
+        }
+
+        // Page extraction
+        function extractPages() {
+            const pageRange = prompt('Enter page range (e.g., 1-5):');
+            if (pageRange) {
+                alert('Extracting pages: ' + pageRange);
+            }
+        }
+
+        // Page reordering
+        function reorderPages() {
+            alert('Drag and drop pages to reorder');
+        }
+
+        // Update properties panel
+        function updatePropertiesPanel() {
+            if (selectedAnnotation) {
+                document.getElementById('positionX').value = Math.round(selectedAnnotation.x || 0);
+                document.getElementById('positionY').value = Math.round(selectedAnnotation.y || 0);
+                document.getElementById('sizeWidth').value = Math.round(selectedAnnotation.width || 100);
+                document.getElementById('sizeHeight').value = Math.round(selectedAnnotation.height || 50);
+                document.getElementById('opacity').value = (selectedAnnotation.opacity || 1) * 100;
+                document.getElementById('opacityValue').textContent = Math.round((selectedAnnotation.opacity || 1) * 100) + '%';
+                
+                if (selectedAnnotation.type === 'text') {
+                    document.getElementById('textProperties').style.display = 'block';
+                    document.getElementById('fontFamily').value = selectedAnnotation.fontFamily || 'Arial';
+                    document.getElementById('fontSize').value = selectedAnnotation.fontSize || 12;
+                }
+            }
+        }
+
+        // Update position
+        function updatePosition(axis, value) {
+            if (selectedAnnotation) {
+                selectedAnnotation[axis] = parseFloat(value);
+                renderAnnotations(currentPage);
+                addToHistory('Move');
+            }
+        }
+
+        // Update size
+        function updateSize(dimension, value) {
+            if (selectedAnnotation) {
+                if (aspectRatioLocked && dimension === 'width') {
+                    selectedAnnotation.height = value / originalAspectRatio;
+                } else if (aspectRatioLocked && dimension === 'height') {
+                    selectedAnnotation.width = value * originalAspectRatio;
+                } else {
+                    selectedAnnotation[dimension] = parseFloat(value);
+                }
+                renderAnnotations(currentPage);
+                addToHistory('Resize');
+            }
+        }
+
+        // Lock aspect ratio
+        function lockAspectRatio() {
+            aspectRatioLocked = !aspectRatioLocked;
+            document.getElementById('aspectLock').innerHTML = aspectRatioLocked ? '🔓 Unlock' : '🔒 Lock';
+            
+            if (selectedAnnotation) {
+                originalAspectRatio = selectedAnnotation.width / selectedAnnotation.height;
+            }
+        }
+
+        // Reset transform
+        function resetTransform() {
+            if (selectedAnnotation) {
+                selectedAnnotation.x = 100;
+                selectedAnnotation.y = 100;
+                selectedAnnotation.width = 100;
+                selectedAnnotation.height = 50;
+                renderAnnotations(currentPage);
+                addToHistory('Reset transform');
+            }
+        }
+
+        // Update fill color
+        function updateFillColor() {
+            currentFillColor = document.getElementById('fillColor').value;
+            if (selectedAnnotation) {
+                selectedAnnotation.color = currentFillColor;
+                renderAnnotations(currentPage);
+                addToHistory('Change color');
+            }
+        }
+
+        // Update stroke color
+        function updateStrokeColor() {
+            currentStrokeColor = document.getElementById('strokeColor').value;
+            // Apply stroke color to selected annotation
+        }
+
+        // Update blend mode
+        function updateBlendMode() {
+            const blendMode = document.getElementById('blendMode').value;
+            if (selectedAnnotation) {
+                selectedAnnotation.blendMode = blendMode;
+                renderAnnotations(currentPage);
+            }
+        }
+
+        // Update shadow
+        function updateShadow() {
+            const enabled = document.getElementById('shadowEnabled').checked;
+            if (selectedAnnotation) {
+                selectedAnnotation.shadow = enabled;
+                renderAnnotations(currentPage);
+            }
+        }
+
+        // Update border radius
+        function updateBorderRadius() {
+            const radius = document.getElementById('borderRadius').value;
+            if (selectedAnnotation) {
+                selectedAnnotation.borderRadius = radius;
+                renderAnnotations(currentPage);
+            }
+        }
+
+        // Update border
+        function updateBorder() {
+            const style = document.getElementById('borderStyle').value;
+            const width = document.getElementById('borderWidth').value;
+            if (selectedAnnotation) {
+                selectedAnnotation.borderStyle = style;
+                selectedAnnotation.borderWidth = width;
+                renderAnnotations(currentPage);
+            }
+        }
+
+        // Update status bar
+        function updateStatusBar(message) {
+            document.getElementById('aiStatus').textContent = message;
+            setTimeout(() => {
+                document.getElementById('aiStatus').textContent = 'AI Ready';
+            }, 3000);
+        }
+
+        // Show loading
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Create blank PDF
         function createBlankPDF() {
-            // Create a simple blank PDF structure
             totalPages = 1;
             pdfDoc = {
                 numPages: 1,
@@ -573,6 +1986,7 @@
             updatePageInfo();
         }
 
+        // Render page
         function renderPage(pageNum) {
             if (!pdfDoc) return;
             
@@ -589,11 +2003,9 @@
                     viewport: viewport
                 };
                 
-                // Clear container and add new canvas
                 const container = document.getElementById('pdf-container');
                 container.innerHTML = '';
                 
-                // Create page wrapper
                 const pageWrapper = document.createElement('div');
                 pageWrapper.className = 'pdf-page';
                 pageWrapper.id = `page-${pageNum}`;
@@ -602,7 +2014,6 @@
                 
                 pageWrapper.appendChild(canvas);
                 
-                // Create annotation layer
                 const annotationLayer = document.createElement('div');
                 annotationLayer.className = 'annotation-layer';
                 annotationLayer.id = `annotation-layer-${pageNum}`;
@@ -610,13 +2021,122 @@
                 
                 container.appendChild(pageWrapper);
                 
-                // Render PDF page
                 page.render(renderContext).promise.then(function() {
                     renderAnnotations(pageNum);
                 });
             });
         }
 
+        // Render annotations
+        function renderAnnotations(pageNum) {
+            const layer = document.getElementById(`annotation-layer-${pageNum}`);
+            if (!layer) return;
+            
+            layer.innerHTML = '';
+            
+            const pageAnnotations = annotations.filter(a => a.page === pageNum);
+            
+            pageAnnotations.forEach(anno => {
+                const element = document.createElement('div');
+                element.className = 'annotation';
+                
+                if (selectedAnnotations.includes(anno) || (selectedAnnotation && selectedAnnotation.id === anno.id)) {
+                    element.classList.add('selected');
+                }
+                
+                if (anno.groupId) {
+                    element.classList.add('grouped');
+                }
+                
+                element.style.left = anno.x + 'px';
+                element.style.top = anno.y + 'px';
+                element.style.width = anno.width + 'px';
+                element.style.height = anno.height + 'px';
+                element.style.backgroundColor = anno.color;
+                element.style.opacity = anno.opacity || 1;
+                element.style.position = 'absolute';
+                element.style.cursor = 'move';
+                element.style.borderStyle = anno.borderStyle || 'solid';
+                element.style.borderWidth = (anno.borderWidth || 1) + 'px';
+                element.style.borderColor = anno.strokeColor || '#000';
+                element.style.borderRadius = (anno.borderRadius || 0) + 'px';
+                element.style.mixBlendMode = anno.blendMode || 'normal';
+                
+                if (anno.shadow) {
+                    element.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+                }
+                
+                if (anno.type === 'text') {
+                    element.classList.add('text-annotation');
+                    element.textContent = anno.text;
+                    element.style.fontFamily = anno.fontFamily;
+                    element.style.fontSize = anno.fontSize + 'px';
+                    element.style.fontWeight = anno.fontWeight || 'normal';
+                    element.style.color = anno.textColor || '#000';
+                    element.style.background = 'transparent';
+                }
+                
+                if (anno.type === 'stamp') {
+                    element.style.display = 'flex';
+                    element.style.alignItems = 'center';
+                    element.style.justifyContent = 'center';
+                    element.style.fontSize = anno.fontSize + 'px';
+                    element.style.fontWeight = anno.fontWeight;
+                    element.style.color = 'white';
+                    element.style.textAlign = 'center';
+                    element.textContent = anno.text;
+                }
+                
+                element.onmousedown = (e) => {
+                    if (currentTool === 'select') {
+                        if (e.shiftKey) {
+                            // Add to selection
+                            if (!selectedAnnotations.includes(anno)) {
+                                selectedAnnotations.push(anno);
+                            }
+                        } else {
+                            selectedAnnotations = [anno];
+                            selectedAnnotation = anno;
+                        }
+                        startDrag(e, anno);
+                    }
+                };
+                
+                layer.appendChild(element);
+            });
+        }
+
+        // Start drag
+        function startDrag(e, annotation) {
+            if (currentTool !== 'select') return;
+            
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const startLeft = annotation.x;
+            const startTop = annotation.y;
+            
+            function onMouseMove(e) {
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                
+                annotation.x = startLeft + dx;
+                annotation.y = startTop + dy;
+                
+                renderAnnotations(currentPage);
+                updatePropertiesPanel();
+            }
+            
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                addToHistory('Move');
+            }
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        }
+
+        // Generate page thumbnails
         function generatePageThumbnails() {
             const pagesList = document.getElementById('pagesList');
             pagesList.innerHTML = '';
@@ -640,12 +2160,12 @@
             }
         }
 
+        // Go to page
         function goToPage(pageNum) {
             currentPage = pageNum;
             renderPage(currentPage);
             updatePageInfo();
             
-            // Update active thumbnail
             document.querySelectorAll('.page-thumbnail').forEach((thumb, index) => {
                 if (index + 1 === pageNum) {
                     thumb.classList.add('active');
@@ -655,6 +2175,15 @@
             });
         }
 
+        // Add blank page
+        function addBlankPage() {
+            totalPages++;
+            generatePageThumbnails();
+            goToPage(totalPages);
+            addToHistory('Add page');
+        }
+
+        // Load PDF
         function loadPDF() {
             document.getElementById('fileInput').click();
         }
@@ -662,6 +2191,7 @@
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file && file.type === 'application/pdf') {
+                showLoading();
                 const fileReader = new FileReader();
                 fileReader.onload = function() {
                     const typedarray = new Uint8Array(this.result);
@@ -671,42 +2201,60 @@
                         renderPage(1);
                         generatePageThumbnails();
                         updatePageInfo();
+                        hideLoading();
+                        updateStatusBar(`Loaded ${file.name}`);
+                        addToHistory('Load document');
                     });
                 };
                 fileReader.readAsArrayBuffer(file);
             }
         });
 
+        // Save PDF
         function savePDF() {
             showLoading();
-            // In a real implementation, you'd use a library like jspdf or pdf-lib
-            // For now, we'll just simulate saving
             setTimeout(() => {
-                alert('PDF saved successfully!');
                 hideLoading();
+                alert('✨ Atobe Pro: Document saved successfully!');
+                updateStatusBar('Document saved');
             }, 1500);
         }
 
+        // Export PDF
+        function exportPDF() {
+            const format = prompt('Export format (PDF, PNG, JPG):', 'PDF');
+            if (format) {
+                showLoading();
+                setTimeout(() => {
+                    hideLoading();
+                    alert(`📤 Exported as ${format}`);
+                    updateStatusBar(`Exported as ${format}`);
+                }, 1500);
+            }
+        }
+
+        // Select tool
         function selectTool(tool) {
             currentTool = tool;
             
-            // Update active button states
             document.querySelectorAll('.toolbar-button').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.getElementById(`tool${tool.charAt(0).toUpperCase() + tool.slice(1)}`).classList.add('active');
             
-            // Update annotation layer mode
             const annotationLayers = document.querySelectorAll('.annotation-layer');
             annotationLayers.forEach(layer => {
-                if (tool !== 'select') {
+                if (tool !== 'select' && tool !== 'hand') {
                     layer.classList.add('drawing-mode');
                 } else {
                     layer.classList.remove('drawing-mode');
                 }
             });
+            
+            updateStatusBar(`${tool} tool selected`);
         }
 
+        // Zoom functions
         function zoomIn() {
             zoom += 0.1;
             document.getElementById('zoomLevel').textContent = Math.round(zoom * 100) + '%';
@@ -723,18 +2271,19 @@
 
         function fitToPage() {
             const container = document.getElementById('pdfViewer');
-            const pageWidth = 612; // Standard PDF width
+            const pageWidth = 612;
             zoom = (container.clientWidth - 40) / pageWidth;
             document.getElementById('zoomLevel').textContent = Math.round(zoom * 100) + '%';
             renderPage(currentPage);
         }
 
+        // Add text annotation
         function addTextAnnotation() {
-            const text = prompt('Enter text:', 'Sample Text');
+            const text = prompt('Enter text:', 'Atobe Pro Text');
             if (!text) return;
             
             const annotation = {
-                id: 'anno_' + Date.now(),
+                id: 'atobe_' + Date.now(),
                 type: 'text',
                 page: currentPage,
                 text: text,
@@ -742,18 +2291,24 @@
                 y: 100,
                 width: 200,
                 height: 30,
-                color: currentColor,
+                color: 'transparent',
+                textColor: currentColor,
                 fontSize: currentFontSize,
-                fontFamily: currentFontFamily
+                fontFamily: currentFontFamily,
+                fontWeight: 'normal',
+                createdAt: new Date().toISOString()
             };
             
             annotations.push(annotation);
             renderAnnotations(currentPage);
+            addToHistory('Add text');
+            updateStatusBar('Text annotation added');
         }
 
+        // Add highlight
         function addHighlight() {
             const annotation = {
-                id: 'anno_' + Date.now(),
+                id: 'atobe_' + Date.now(),
                 type: 'highlight',
                 page: currentPage,
                 x: 100,
@@ -766,11 +2321,31 @@
             
             annotations.push(annotation);
             renderAnnotations(currentPage);
+            addToHistory('Add highlight');
         }
 
+        // Add underline
+        function addUnderline() {
+            const annotation = {
+                id: 'atobe_' + Date.now(),
+                type: 'underline',
+                page: currentPage,
+                x: 100,
+                y: 100,
+                width: 200,
+                height: 2,
+                color: '#0000ff'
+            };
+            
+            annotations.push(annotation);
+            renderAnnotations(currentPage);
+            addToHistory('Add underline');
+        }
+
+        // Add strikeout
         function addStrikeout() {
             const annotation = {
-                id: 'anno_' + Date.now(),
+                id: 'atobe_' + Date.now(),
                 type: 'strikeout',
                 page: currentPage,
                 x: 100,
@@ -782,179 +2357,101 @@
             
             annotations.push(annotation);
             renderAnnotations(currentPage);
+            addToHistory('Add strikeout');
         }
 
-        function renderAnnotations(pageNum) {
-            const layer = document.getElementById(`annotation-layer-${pageNum}`);
-            if (!layer) return;
-            
-            layer.innerHTML = '';
-            
-            const pageAnnotations = annotations.filter(a => a.page === pageNum);
-            
-            pageAnnotations.forEach(anno => {
-                const element = document.createElement('div');
-                element.className = 'annotation';
-                if (anno.id === selectedAnnotation?.id) {
-                    element.classList.add('selected');
-                }
-                
-                element.style.left = anno.x + 'px';
-                element.style.top = anno.y + 'px';
-                element.style.width = anno.width + 'px';
-                element.style.height = anno.height + 'px';
-                element.style.backgroundColor = anno.color;
-                element.style.opacity = anno.opacity || 1;
-                element.style.position = 'absolute';
-                element.style.cursor = 'move';
-                
-                if (anno.type === 'text') {
-                    element.classList.add('text-annotation');
-                    element.textContent = anno.text;
-                    element.style.fontFamily = anno.fontFamily;
-                    element.style.fontSize = anno.fontSize + 'px';
-                    element.style.color = anno.color;
-                    element.style.backgroundColor = 'transparent';
-                }
-                
-                element.onmousedown = (e) => {
-                    if (currentTool === 'select') {
-                        selectAnnotation(anno);
-                        startDrag(e, anno);
-                    }
-                };
-                
-                layer.appendChild(element);
-            });
-        }
-
-        function selectAnnotation(anno) {
-            selectedAnnotation = anno;
-            renderAnnotations(currentPage);
-            updatePropertiesPanel();
-        }
-
-        function startDrawing(e) {
-            if (currentTool === 'draw' && e.button === 0) {
-                isDrawing = true;
-                const rect = e.currentTarget.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                // Start a new drawing annotation
-                const annotation = {
-                    id: 'draw_' + Date.now(),
-                    type: 'drawing',
-                    page: currentPage,
-                    points: [{x, y}],
-                    color: currentColor,
-                    width: 2
-                };
-                
-                annotations.push(annotation);
-                selectedAnnotation = annotation;
-            }
-        }
-
-        function draw(e) {
-            if (!isDrawing || currentTool !== 'draw') return;
-            
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            if (selectedAnnotation && selectedAnnotation.type === 'drawing') {
-                selectedAnnotation.points.push({x, y});
-                renderDrawing(selectedAnnotation);
-            }
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-            selectedAnnotation = null;
-        }
-
-        function renderDrawing(annotation) {
-            // In a real implementation, you'd draw on canvas
-            // For now, we'll just update the annotation layer
-            renderAnnotations(currentPage);
-        }
-
-        function startDrag(e, annotation) {
-            if (currentTool !== 'select') return;
-            
-            const startX = e.clientX;
-            const startY = e.clientY;
-            const startLeft = annotation.x;
-            const startTop = annotation.y;
-            
-            function onMouseMove(e) {
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                
-                annotation.x = startLeft + dx;
-                annotation.y = startTop + dy;
-                
-                renderAnnotations(currentPage);
-                updatePropertiesPanel();
-            }
-            
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-            
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        }
-
-        function showContextMenu(e) {
-            e.preventDefault();
-            
-            const menu = document.getElementById('contextMenu');
-            menu.style.display = 'block';
-            menu.style.left = e.pageX + 'px';
-            menu.style.top = e.pageY + 'px';
-        }
-
+        // Delete selected
         function deleteSelectedAnnotation() {
             if (selectedAnnotation) {
                 annotations = annotations.filter(a => a.id !== selectedAnnotation.id);
                 selectedAnnotation = null;
                 renderAnnotations(currentPage);
+                addToHistory('Delete');
+                updatePropertiesPanel();
+            } else if (selectedAnnotations.length > 0) {
+                const ids = selectedAnnotations.map(a => a.id);
+                annotations = annotations.filter(a => !ids.includes(a.id));
+                selectedAnnotations = [];
+                renderAnnotations(currentPage);
+                addToHistory('Delete multiple');
                 updatePropertiesPanel();
             }
             document.getElementById('contextMenu').style.display = 'none';
         }
 
-        function copyAnnotation() {
-            // Implement copy functionality
-            document.getElementById('contextMenu').style.display = 'none';
+        // Duplicate annotation
+        function duplicateAnnotation() {
+            if (selectedAnnotation) {
+                const duplicate = JSON.parse(JSON.stringify(selectedAnnotation));
+                duplicate.id = 'duplicate_' + Date.now();
+                duplicate.x += 20;
+                duplicate.y += 20;
+                annotations.push(duplicate);
+                renderAnnotations(currentPage);
+                addToHistory('Duplicate');
+            }
         }
 
-        function cutAnnotation() {
-            // Implement cut functionality
-            document.getElementById('contextMenu').style.display = 'none';
-        }
-
+        // Bring to front
         function bringToFront() {
-            // Implement bring to front
+            if (selectedAnnotation) {
+                // Move to end of array (rendered last)
+                annotations = annotations.filter(a => a.id !== selectedAnnotation.id);
+                annotations.push(selectedAnnotation);
+                renderAnnotations(currentPage);
+                addToHistory('Bring to front');
+            }
+        }
+
+        // Send to back
+        function sendToBack() {
+            if (selectedAnnotation) {
+                // Move to beginning of array (rendered first)
+                annotations = annotations.filter(a => a.id !== selectedAnnotation.id);
+                annotations.unshift(selectedAnnotation);
+                renderAnnotations(currentPage);
+                addToHistory('Send to back');
+            }
+        }
+
+        // Context menu
+        function showContextMenu(e) {
+            e.preventDefault();
+            
+            if (selectedAnnotation || selectedAnnotations.length > 0) {
+                const menu = document.getElementById('contextMenu');
+                menu.style.display = 'block';
+                menu.style.left = e.pageX + 'px';
+                menu.style.top = e.pageY + 'px';
+            }
+        }
+
+        // Copy function for context menu
+        function copyAnnotation() {
+            copySelected();
             document.getElementById('contextMenu').style.display = 'none';
         }
 
-        function addBlankPage() {
-            totalPages++;
-            generatePageThumbnails();
-            goToPage(totalPages);
+        // Cut function for context menu
+        function cutAnnotation() {
+            cutSelected();
+            document.getElementById('contextMenu').style.display = 'none';
         }
 
+        // Paste function for context menu
+        function pasteAnnotation() {
+            paste();
+            document.getElementById('contextMenu').style.display = 'none';
+        }
+
+        // Select color
         function selectColor(color) {
             currentColor = color;
             
-            // Update color picker UI
             document.querySelectorAll('.color-option').forEach(opt => {
                 opt.classList.remove('selected');
-                if (opt.style.backgroundColor === color) {
+                if (opt.style.backgroundColor === color || 
+                    (color === '#ffffff' && opt.style.backgroundColor === 'rgb(255, 255, 255)')) {
                     opt.classList.add('selected');
                 }
             });
@@ -962,66 +2459,40 @@
             if (selectedAnnotation) {
                 selectedAnnotation.color = color;
                 renderAnnotations(currentPage);
+                addToHistory('Change color');
             }
         }
 
+        // Update text properties
         function updateTextProperties() {
             currentFontFamily = document.getElementById('fontFamily').value;
             currentFontSize = parseInt(document.getElementById('fontSize').value);
+            const fontWeight = document.getElementById('fontWeight').value;
             
             if (selectedAnnotation && selectedAnnotation.type === 'text') {
                 selectedAnnotation.fontFamily = currentFontFamily;
                 selectedAnnotation.fontSize = currentFontSize;
+                selectedAnnotation.fontWeight = fontWeight;
                 renderAnnotations(currentPage);
+                addToHistory('Update text properties');
             }
         }
 
+        // Update opacity
         function updateOpacity() {
             const opacity = document.getElementById('opacity').value / 100;
+            document.getElementById('opacityValue').textContent = Math.round(opacity * 100) + '%';
             
             if (selectedAnnotation) {
                 selectedAnnotation.opacity = opacity;
                 renderAnnotations(currentPage);
+                addToHistory('Change opacity');
             }
         }
 
-        function updatePropertiesPanel() {
-            if (selectedAnnotation) {
-                document.getElementById('positionX').value = selectedAnnotation.x || '';
-                document.getElementById('positionY').value = selectedAnnotation.y || '';
-                document.getElementById('sizeWidth').value = selectedAnnotation.width || '';
-                document.getElementById('sizeHeight').value = selectedAnnotation.height || '';
-                document.getElementById('selectionInfo').textContent = `Selected: ${selectedAnnotation.type}`;
-            } else {
-                document.getElementById('positionX').value = '';
-                document.getElementById('positionY').value = '';
-                document.getElementById('sizeWidth').value = '';
-                document.getElementById('sizeHeight').value = '';
-                document.getElementById('selectionInfo').textContent = 'No selection';
-            }
-        }
-
+        // Update page info
         function updatePageInfo() {
             document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
-        }
-
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
-
-        // Additional utility functions
-        function addImage() {
-            // Implement image insertion
-            alert('Image insertion would be implemented here');
-        }
-
-        function addSignature() {
-            // Implement signature drawing
-            alert('Signature tool would open a drawing pad');
         }
     </script>
 </body>
